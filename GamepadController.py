@@ -1,9 +1,5 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-"""
-第一個字還是用原本的九宮格輸入，第二個字開始提供簡便的方式讓她選。
-"""
-import time
 import copy
 from subprocess import call
 from DSJoyStick import DSJoyStick
