@@ -1,8 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 import copy
-from subprocess import call
 from DSJoyStick import DSJoyStick
+from DSPlaySound import DSPlaySound
 
 kSymbols = {
     '11':u'ㄅ', '12':u'ㄆ', '13':u'ㄇ', '14':u'ㄈ', '15':u'ㄉ', '16':u'ㄊ', '17':u'ㄋ', '18':u'ㄌ',
@@ -97,11 +97,13 @@ def didChooseRightDirectionCallback(direction):
                 sentence = sentence[:-1]
         if direction == 2:
 			# 依序發出句子裡每個字的聲音
-			for word in sentence:
-				path = u"sounds/"+ word + u".wav"
-				print "play sound: " + path
-				call(["afplay", path])
-			sentence = []
+            playsound = DSPlaySound()
+            for word in sentence:
+                path = u"sounds/"+ word + u".wav"
+                print "play sound: " + path
+                playsound.play(path)
+#				call(["afplay", path])
+            sentence = []
     
 def getRightClickCallback():
     print("getRightClickCallback")
