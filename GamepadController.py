@@ -30,6 +30,7 @@ currentMode = 0
 j = DSJoyStick()
 # 兩個 int 組成一個注音符號
 twoNumbers = ""
+# 2~4 個 symbol 組成一個字
 aWord = ""
 sentence = []
 observing = False
@@ -52,11 +53,20 @@ def didChooseDirectionCallback(direction):
         if len(twoNumbers) < 2:
             print("one number entered: " + str(twoNumbers))
         else:
+            # 使用者輸入了兩個數字，在這裡組成一個注音符號
             aSymbol = kSymbols.get(twoNumbers, 0)
-            print("a symbole is entered: " + aSymbol)
+            if aSymbol == 0:
+                #TODO: 出聲提示使用者輸入錯誤
+                print("this symble is not exist: " + twoNumbers)
+                twoNumbers = twoNumbers[:-1]
+                return
+                
+            print("a symbol is entered: " + aSymbol)
             aWord += aSymbol
-            print("a word is entered: " + aWord)
+            aSymbol = ""
             if twoNumbers[:1] == "7":
+                # 當輸入聲韻，表示一個字輸入完了
+                print("a word is entered: " + aWord)
                 sentence.append(aWord)
                 aWord = ""
                 print("sentence is entered: " + str(sentence))
@@ -71,70 +81,29 @@ def willChooseRightDirectionCallback(direction):
 def didChooseRightDirectionCallback(direction):
     print("didChooseRightDirectionCallback: " + str(direction))
     global twoNumbers
+    global aWord
+    global sentence
     if currentMode == 0:
-        if len(twoNumbers) < 2:
-            print("one number will be delete: " + str(twoNumbers))
-            twoNumbers = ""
+        if direction == 1:
+            # 在 currentMode 為 0 時，右搖桿向左要刪除前一個輸入的數字、輸入到一個字、前一個字
+            if len(twoNumbers) == 1:
+                print("delete one number: " + str(twoNumbers))
+                twoNumbers = ""
+            elif len(aWord) > 0:
+                print("delete final symbol in a word: " + aWord[-1])
+                aWord = aWord[:-1]
+            elif len(sentence) > 0:
+                print("delete final word in sentence: " + sentence[-1])
+                sentence = sentence[:-1]
+        if direction == 2:
+			# 依序發出句子裡每個字的聲音
+			for word in sentence:
+				path = u"sounds/"+ word + u".wav"
+				print "play sound: " + path
+				call(["afplay", path])
+			sentence = []
     
 def getRightClickCallback():
     print("getRightClickCallback")
     
 j.getOutputs(willChooseDirectionCallback, didChooseDirectionCallback, willChooseRightDirectionCallback, didChooseRightDirectionCallback, getClickCallback, getRightClickCallback)
-#while True:
-#	time.sleep(0.3)
-#	outputs = j.getOutputs()
-#	values[0] = outputs[0]
-#	values[1] = outputs[1]
-#	values[2] = outputs[15]
-#	if currentMode == 0:
-#		if (len([i for i in values if i <> 0]) > 0):
-#			oneNumber = intFromArray(values)
-#			observing = True
-#
-#		if (observing == True) and (values[0] == values[1] == values[2] == 0):
-#			#這時要發出一個聲音提示她剛輸入的是哪個數字
-#			print "one number is inputted: " + str(oneNumber)
-#			observing = False
-#			twoNumbers += str(oneNumber)
-#			oneNumber = 0
-#
-#		if len(twoNumbers) == 2:
-#			aSymbol = kSymbols.get(twoNumbers, 0)
-#			print "symbol: " + aSymbol
-#			if aSymbol != 0:
-#				aWord += aSymbol
-#				if twoNumbers[:1] == "7":
-#					# 已輸入聲韻，表示這個中文字輸入完了
-#					sentence.append(aWord)
-#					print "sentence: " + ', '.join(sentence)
-#					aWord = ""
-#				else:
-#					# 還沒輸入聲韻，這時要提示她輸入的是哪個注音符號
-#					print "a symbol is inputted: " + aSymbol
-#				twoNumbers = ""
-#			else:
-#				# 沒有這個注音符號
-#				print("there is no this word")
-#				twoNumbers = ""
-#		if values[2] == 1:
-#			observing = False
-#			currentMode = 1
-#	else:
-#		print "entered menu mode"
-#		if values[0] == -1:
-#			# 刪除前一個輸入的東西
-#			if oneNumber != 0:
-#				print "a number is deleted: " + oneNumber
-#				oneNumber = 0
-#				currentMode = 0
-#
-#		if values[0] == 1:
-#			# 依序發出句子裡每個字的聲音
-#			for word in sentence:
-#				path = u"sounds/"+ word + u".wav"
-#				print "play sound: " + path
-#				call(["afplay", path])
-#			sentence = []
-#			currentMode = 0
-#			
-#		
