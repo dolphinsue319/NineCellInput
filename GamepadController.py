@@ -28,21 +28,58 @@ kFootSymbols = [
 
 currentMode = 0
 j = DSJoyStick()
-oneNumber = 0
 # 兩個 int 組成一個注音符號
 twoNumbers = ""
 aWord = ""
 sentence = []
 observing = False
 
-def willSelectDirectionCallback(direction):
+def willChooseDirectionCallback(direction):
+    """
+    搖桿被移到某一個方向了，且還沒放掉搖桿
+    """
     print("willSelectDirectionCallback: " + str(direction))
-def getDirectionCallback(direction):
+    
+def didChooseDirectionCallback(direction):
+    """
+    搖桿從某個方向被放掉了。
+    """
     print("getDirectionCallback: " + str(direction))
-def getClickCallback(click):
-    print("getClickCallback: " + str(direction))
-
-j.getOutputs(willSelectDirectionCallback, getDirectionCallback, getClickCallback)
+    global twoNumbers
+    global aWord
+    if currentMode == 0:
+        twoNumbers += str(direction)
+        if len(twoNumbers) < 2:
+            print("one number entered: " + str(twoNumbers))
+        else:
+            aSymbol = kSymbols.get(twoNumbers, 0)
+            print("a symbole is entered: " + aSymbol)
+            aWord += aSymbol
+            print("a word is entered: " + aWord)
+            if twoNumbers[:1] == "7":
+                sentence.append(aWord)
+                aWord = ""
+                print("sentence is entered: " + str(sentence))
+            twoNumbers = ""
+    
+def getClickCallback():
+    print("getClickCallback")
+    
+def willChooseRightDirectionCallback(direction):
+    print("willChooseRightDirectionCallback: " + str(direction))
+    
+def didChooseRightDirectionCallback(direction):
+    print("didChooseRightDirectionCallback: " + str(direction))
+    global twoNumbers
+    if currentMode == 0:
+        if len(twoNumbers) < 2:
+            print("one number will be delete: " + str(twoNumbers))
+            twoNumbers = ""
+    
+def getRightClickCallback():
+    print("getRightClickCallback")
+    
+j.getOutputs(willChooseDirectionCallback, didChooseDirectionCallback, willChooseRightDirectionCallback, didChooseRightDirectionCallback, getClickCallback, getRightClickCallback)
 #while True:
 #	time.sleep(0.3)
 #	outputs = j.getOutputs()
