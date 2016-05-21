@@ -6,27 +6,32 @@ from DSPlaySound import DSPlaySound
 
 kSymbols = {
     '11':u'ㄅ', '12':u'ㄆ', '13':u'ㄇ', '14':u'ㄈ', '15':u'ㄉ', '16':u'ㄊ', '17':u'ㄋ', '18':u'ㄌ',
-        '21':u'ㄍ', '22':u'ㄎ', '23':u'ㄏ', '24':u'ㄐ', '25':u'ㄑ', '26':u'ㄒ',
-        '31':u'ㄓ', '32':u'ㄔ', '33':u'ㄕ', '34':u'ㄖ', '35':u'ㄗ', '36':u'ㄘ', '37':u'ㄙ',
-        '41':u'ㄧ', '42':u'ㄨ', '43':u'ㄩ',
-        '51':u'ㄚ', '52':u'ㄛ', '53':u'ㄜ', '54':u'ㄝ', '55':u'ㄞ', '56':u'ㄟ', '57':u'ㄠ', '58':u'ㄡ',
-        '61':u'ㄢ', '62':u'ㄣ', '63':u'ㄤ', '64':u'ㄥ', '65':u'ㄦ',
-        '71':u'',  '72':u'ˊ',  '73':u'ˇ', '74':u'ˋ',  '75':u'˙'}
+    '21':u'ㄍ', '22':u'ㄎ', '23':u'ㄏ', '24':u'ㄐ', '25':u'ㄑ', '26':u'ㄒ',
+    '31':u'ㄓ', '32':u'ㄔ', '33':u'ㄕ', '34':u'ㄖ', '35':u'ㄗ', '36':u'ㄘ', '37':u'ㄙ',
+    '41':u'ㄧ', '42':u'ㄨ', '43':u'ㄩ',
+    '51':u'ㄚ', '52':u'ㄛ', '53':u'ㄜ', '54':u'ㄝ', '55':u'ㄞ', '56':u'ㄟ', '57':u'ㄠ', '58':u'ㄡ',
+    '61':u'ㄢ', '62':u'ㄣ', '63':u'ㄤ', '64':u'ㄥ', '65':u'ㄦ',
+    '71':u'',  '72':u'ˊ',  '73':u'ˇ', '74':u'ˋ',  '75':u'˙'}
 kHeadSymbols = [
-                u"ㄅ", u"ㄆ", u"ㄇ", u"ㄈ",
-                u"ㄉ", u"ㄊ", u"ㄋ", u"ㄌ",
-                u"ㄍ", u"ㄎ", u"ㄏ",
-                u"ㄐ", u"ㄑ", u"ㄒ",
-                u"ㄓ", u"ㄔ", u"ㄕ", u"ㄖ",
-                u"ㄗ", u"ㄘ", u"ㄙ"]
+    u"ㄅ", u"ㄆ", u"ㄇ", u"ㄈ",
+    u"ㄉ", u"ㄊ", u"ㄋ", u"ㄌ",
+    u"ㄍ", u"ㄎ", u"ㄏ",
+    u"ㄐ", u"ㄑ", u"ㄒ",
+    u"ㄓ", u"ㄔ", u"ㄕ", u"ㄖ",
+    u"ㄗ", u"ㄘ", u"ㄙ"]
 kBodySymbols = [u'ㄧ', u'ㄨ', u'ㄩ']
 kFootSymbols = [
-                u'ㄚ', u'ㄛ', u'ㄜ', u'ㄝ',
-                u'ㄞ', u'ㄟ', u'ㄠ', u'ㄡ',
-                u'ㄢ', u'ㄣ', u'ㄤ', u'ㄥ',
-                u'ㄦ']
+    u'ㄚ', u'ㄛ', u'ㄜ', u'ㄝ',
+    u'ㄞ', u'ㄟ', u'ㄠ', u'ㄡ',
+    u'ㄢ', u'ㄣ', u'ㄤ', u'ㄥ',
+    u'ㄦ']
+# 自由輸入模式
+kModeFreeSpeak = 1
+kModeInputFavorite = 2
+# 選單模式
+kModeMenu = 0
+currentMode = kModeFreeSpeak
 
-currentMode = 0
 j = DSJoyStick()
 # 兩個 int 組成一個注音符號
 twoNumbers = ""
@@ -48,7 +53,7 @@ def didChooseDirectionCallback(direction):
     print("getDirectionCallback: " + str(direction))
     global twoNumbers
     global aWord
-    if currentMode == 0:
+    if currentMode == kModeFreeSpeak:
         twoNumbers += str(direction)
         if len(twoNumbers) < 2:
             print("one number entered: " + str(twoNumbers))
@@ -80,12 +85,13 @@ def willChooseRightDirectionCallback(direction):
     
 def didChooseRightDirectionCallback(direction):
     print("didChooseRightDirectionCallback: " + str(direction))
-    global twoNumbers
-    global aWord
-    global sentence
-    if currentMode == 0:
+    global currentMode
+    if currentMode == kModeFreeSpeak:
+        global twoNumbers
+        global aWord
+        global sentence
         if direction == 1:
-            # 在 currentMode 為 0 時，右搖桿向左要刪除前一個輸入的數字、輸入到一個字、前一個字
+            # 在 currentMode 為 0 時，右搖桿向左要刪除前一個輸入的數字、前一個注音符號、前一個字
             if len(twoNumbers) == 1:
                 print("delete one number: " + str(twoNumbers))
                 twoNumbers = ""
@@ -102,6 +108,13 @@ def didChooseRightDirectionCallback(direction):
         if direction == 3:
             # 預聽目前為止輸入的句子，所以最後不清除 sentence
             playCurrentSentence()
+    if currentMode == kModeMenu:
+        # 進入了選單模式
+        if direction == 1:
+            currentMode = kModeFreeSpeak
+        if direction == 2:
+            currentMode = kModeInputFavorite
+            
 def playCurrentSentence():
     playsound = DSPlaySound()
     for word in sentence:
@@ -112,5 +125,6 @@ def playCurrentSentence():
     
 def getRightClickCallback():
     print("getRightClickCallback")
+    currentMode = kModeMenu
     
 j.getOutputs(willChooseDirectionCallback, didChooseDirectionCallback, willChooseRightDirectionCallback, didChooseRightDirectionCallback, getClickCallback, getRightClickCallback)
