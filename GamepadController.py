@@ -97,13 +97,18 @@ def didChooseRightDirectionCallback(direction):
                 sentence = sentence[:-1]
         if direction == 2:
 			# 依序發出句子裡每個字的聲音
-            playsound = DSPlaySound()
-            for word in sentence:
-                path = u"sounds/"+ word + u".wav"
-                print "play sound: " + path
-                playsound.play(path)
-#				call(["afplay", path])
+            playCurrentSentence()
             sentence = []
+        if direction == 3:
+            # 預聽目前為止輸入的句子，所以最後不清除 sentence
+            playCurrentSentence()
+def playCurrentSentence():
+    playsound = DSPlaySound()
+    for word in sentence:
+        path = u"sounds/"+ word + u".wav"
+        print "play sound: " + path
+        playsound.play(path)
+            
     
 def getRightClickCallback():
     print("getRightClickCallback")
