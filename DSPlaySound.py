@@ -9,7 +9,7 @@ class DSPlaySound:
 	"""
 	def __init__(self):
 		self.os = 0
-		if platform.platform() != 'Darwin-15.4.0-x86_64-i386-64bit':
+		if "Darwin" not in platform.platform():
 			self.os = 1
 	def play(self, path):
 		if self.os == 0:
