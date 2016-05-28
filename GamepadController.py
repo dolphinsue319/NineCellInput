@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 import copy
+import os
 from DSJoyStick import DSJoyStick
 from DSPlaySound import DSPlaySound
 
@@ -118,7 +119,7 @@ def didChooseRightDirectionCallback(direction):
 def playCurrentSentence():
     playsound = DSPlaySound()
     for word in sentence:
-        path = u"sounds/"+ word + u".wav"
+        path = os.path.dirname(os.path.abspath(__file__)) + u"/sounds/"+ word + u".wav"
         print "play sound: " + path
         playsound.play(path)
             
