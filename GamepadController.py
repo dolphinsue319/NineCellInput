@@ -103,7 +103,7 @@ def didChooseRightDirectionCallback(direction):
                 print("delete final word in sentence: " + sentence[-1])
                 sentence = sentence[:-1]
         if direction == 2:
-			# 依序發出句子裡每個字的聲音
+            # 依序發出句子裡每個字的聲音
             playCurrentSentence()
             sentence = []
         if direction == 3:
