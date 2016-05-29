@@ -2,15 +2,10 @@
 # -*- coding: utf-8 -*-
 import copy
 import os
+import unittest
 from DSJoyStick import DSJoyStick
 from DSPlaySound import DSPlaySound
 from Constants import *
-# 自由輸入模式
-kModeFreeSpeak = 1
-kModeInputFavorite = 2
-# 選單模式
-kModeMenu = 0
-currentMode = kModeFreeSpeak
 
 j = DSJoyStick()
 # 兩個 int 組成一個注音符號
@@ -101,10 +96,25 @@ def playCurrentSentence():
         path = os.path.dirname(os.path.abspath(__file__)) + u"/sounds/"+ word + u".wav"
         print "play sound: " + path
         playsound.play(path)
-            
-    
+def playHint(message):
+    print "play message: " + ', '.join(message)
+    for word in message:
+        path = os.path.dirname(os.path.abspath(__file__)) + u"/sounds/"+ word + u".wav"
+        playsound.play(path)
+        
 def getRightClickCallback():
     print("getRightClickCallback")
+    playsound = DSPlaySound()
     currentMode = kModeMenu
     
-j.getOutputs(willChooseDirectionCallback, didChooseDirectionCallback, willChooseRightDirectionCallback, didChooseRightDirectionCallback, getClickCallback, getRightClickCallback)
+j.getOutputs(willChooseDirectionCallback, 
+didChooseDirectionCallback, 
+willChooseRightDirectionCallback, 
+didChooseRightDirectionCallback, 
+getClickCallback, 
+getRightClickCallback)
+
+class tests(unittest.TestCase):
+    def test_hint():
+        playHint(HintMessages.enterMenuMode)
+unittest.main()

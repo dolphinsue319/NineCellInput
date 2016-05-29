@@ -1,5 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+import unittest
 
 kSymbols = {
 	'11':u'ㄅ', '12':u'ㄆ', '13':u'ㄇ', '14':u'ㄈ', '15':u'ㄉ', '16':u'ㄊ', '17':u'ㄋ', '18':u'ㄌ',
@@ -22,3 +23,23 @@ kFootSymbols = [
 	u'ㄞ', u'ㄟ', u'ㄠ', u'ㄡ',
 	u'ㄢ', u'ㄣ', u'ㄤ', u'ㄥ',
 	u'ㄦ']
+
+class HintMessages:
+	"""
+	這個 class 用來放提示如何使用這個系統的語句，這些字串可以用這個網站轉: http://crptransfer.moe.gov.tw
+	"""
+	enterMenuMode = ['ㄋㄧㄣˊ','ㄐㄧㄣˋ','ㄖㄨ˙','ㄌㄜ','ㄒㄩㄢˇ', 'ㄉㄢ', 'ㄇㄛˊ', 'ㄕˋ']
+
+# 自由輸入模式
+kModeFreeSpeak = 1
+kModeInputFavorite = 2
+# 選單模式
+kModeMenu = 0
+currentMode = kModeFreeSpeak
+
+class HintMessagesTest(unittest.TestCase):
+	def test_is_message_array(self):
+		message = HintMessages.enterMenuMode
+		self.assertIsInstance(message, list)
+		
+unittest.main()

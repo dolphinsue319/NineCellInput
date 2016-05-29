@@ -16,3 +16,4 @@ class DSPlaySound:
 			call(["afplay", path])
 		else:
 			call(["aplay", path])
+		
