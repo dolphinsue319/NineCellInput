@@ -32,7 +32,8 @@ class HintMessages:
 
 # 自由輸入模式
 kModeFreeSpeak = 1
-kModeInputFavorite = 2
+kModeMantra = 2
+kModeDocument = 8
 # 選單模式
 kModeMenu = 0
 currentMode = kModeFreeSpeak
@@ -42,4 +43,4 @@ class HintMessagesTest(unittest.TestCase):
 		message = HintMessages.enterMenuMode
 		self.assertIsInstance(message, list)
 		
-unittest.main()
+#unittest.main()

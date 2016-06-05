@@ -88,7 +88,9 @@ def didChooseRightDirectionCallback(direction):
         if direction == 1:
             currentMode = kModeFreeSpeak
         if direction == 2:
-            currentMode = kModeInputFavorite
+            currentMode = kModeMantra
+        if direction == 8:
+            currentMode = kModeDocument
             
 def playCurrentSentence():
     playsound = DSPlaySound()
@@ -117,4 +119,4 @@ getRightClickCallback)
 class tests(unittest.TestCase):
     def test_hint():
         playHint(HintMessages.enterMenuMode)
-unittest.main()
+#unittest.main()
