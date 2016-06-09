@@ -154,6 +154,13 @@ def getRightClickCallback():
     print inspect.stack()[0][3]
     global currentMode
     currentMode = kModeMenu
+    # 進到 menu 時，清除剛剛輸入的任何字元
+    global twoNumbers
+    global aWord
+    global sentence
+    twoNumbers = ""
+    aWord = ""
+    sentence = []
     print "enter mode menu"
     
 j.getOutputs(willChooseDirectionCallback, 
