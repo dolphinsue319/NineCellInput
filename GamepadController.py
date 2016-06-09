@@ -13,34 +13,16 @@ twoNumbers = ""
 # 2~4 個 symbol 組成一個字
 aWord = ""
 sentence = []
-observing = False
-
-def deletePreviousInput():
-    """
-    在 currentMode 為 0 時，右搖桿向左要刪除前一個輸入的數字、前一個注音符號、前一個字
-    """
-    global twoNumbers
-    global aWord
-    global sentence
-    if len(twoNumbers) == 1:
-        print("delete one number: " + str(twoNumbers))
-        twoNumbers = ""
-    elif len(aWord) > 0:
-        print("delete final symbol in a word: " + aWord[-1])
-        aWord = aWord[:-1]
-    elif len(sentence) > 0:
-        print("delete final word in sentence: " + sentence[-1])
-        sentence = sentence[:-1]
 
 def willChooseDirectionCallback(direction):
     """
-    搖桿被移到某一個方向了，且還沒放掉搖桿
+    左搖桿被移到某一個方向了，且還沒放掉搖桿
     """
     print("willSelectDirectionCallback: " + str(direction))
     
 def didChooseDirectionCallback(direction):
     """
-    搖桿從某個方向被放掉了。
+    左搖桿從某個方向被放掉了。
     """
     print("getDirectionCallback: " + str(direction))
     global twoNumbers
@@ -106,11 +88,29 @@ def playCurrentSentence():
         path = os.path.dirname(os.path.abspath(__file__)) + u"/sounds/"+ word + u".wav"
         print "play sound: " + path
         playsound.play(path)
+
 def playHint(message):
     print "play message: " + ', '.join(message)
     for word in message:
         path = os.path.dirname(os.path.abspath(__file__)) + u"/sounds/"+ word + u".wav"
         playsound.play(path)
+
+def deletePreviousInput():
+    """
+    在 currentMode 為 0 時，右搖桿向左要刪除前一個輸入的數字、前一個注音符號、前一個字
+    """
+    global twoNumbers
+    global aWord
+    global sentence
+    if len(twoNumbers) == 1:
+        print("delete one number: " + str(twoNumbers))
+        twoNumbers = ""
+    elif len(aWord) > 0:
+        print("delete final symbol in a word: " + aWord[-1])
+        aWord = aWord[:-1]
+    elif len(sentence) > 0:
+        print("delete final word in sentence: " + sentence[-1])
+        sentence = sentence[:-1]
         
 def getRightClickCallback():
     print("getRightClickCallback")
