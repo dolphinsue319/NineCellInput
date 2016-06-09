@@ -9,6 +9,7 @@ from DSPlaySound import DSPlaySound
 from Constants import *
 
 j = DSJoyStick()
+playsound = DSPlaySound()
 # 兩個 int 組成一個注音符號
 twoNumbers = ""
 # 2~4 個 symbol 組成一個字
@@ -22,15 +23,13 @@ def willChooseDirectionCallback(direction):
     """
     左搖桿被移到某一個方向了，且還沒放掉搖桿
     """
-    print inspect.stack()[0][3]
-    print("willSelectDirectionCallback: " + str(direction))
+    print inspect.stack()[0][3] + ': ' + str(direction)
     
 def didChooseDirectionCallback(direction):
     """
     左搖桿從某個方向被放掉了。
     """
-    print inspect.stack()[0][3]
-    print("getDirectionCallback: " + str(direction))
+    print inspect.stack()[0][3] + ': ' + str(direction)
     global twoNumbers
     global aWord
     if currentMode == kModeFreeSpeak:
@@ -59,15 +58,12 @@ def didChooseDirectionCallback(direction):
     
 def getClickCallback():
     print inspect.stack()[0][3]
-    print("getClickCallback")
     
 def willChooseRightDirectionCallback(direction):
-    print inspect.stack()[0][3]
-    print("willChooseRightDirectionCallback: " + str(direction))
+    print inspect.stack()[0][3] + ': ' + str(direction)
     
 def didChooseRightDirectionCallback(direction):
-    print inspect.stack()[0][3]
-    print("didChooseRightDirectionCallback: " + str(direction))
+    print inspect.stack()[0][3] + ': '+ str(direction)
     global currentMode
     if currentMode == kModeMenu:
         # 進入了選單模式
@@ -84,6 +80,7 @@ def didChooseRightDirectionCallback(direction):
         if direction == 8:
             currentMode = kModeDocument
             print "choosed document mode"
+        return
             
     if currentMode == kModeFreeSpeak:
         global twoNumbers
@@ -98,6 +95,7 @@ def didChooseRightDirectionCallback(direction):
         if direction == 3:
             # 預聽目前為止輸入的句子，所以最後不清除 sentence
             playCurrentSentence()
+        return
 
     if currentMode == kModeMantra:
         if len(mantraID) < 2:
@@ -107,11 +105,11 @@ def didChooseRightDirectionCallback(direction):
         else:
             print(mantraID)
             pass
+        return
         
 
 def playCurrentSentence():
     print inspect.stack()[0][3]
-    playsound = DSPlaySound()
     for word in sentence:
         path = os.path.dirname(os.path.abspath(__file__)) + u"/sounds/"+ word + u".wav"
         print "play sound: " + path
@@ -144,7 +142,6 @@ def deletePreviousInput():
         
 def getRightClickCallback():
     print inspect.stack()[0][3]
-    playsound = DSPlaySound()
     currentMode = kModeMenu
     
 j.getOutputs(willChooseDirectionCallback, 
