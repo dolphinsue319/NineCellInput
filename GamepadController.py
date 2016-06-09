@@ -3,6 +3,7 @@
 import copy
 import os
 import unittest
+import inspect
 from DSJoyStick import DSJoyStick
 from DSPlaySound import DSPlaySound
 from Constants import *
@@ -12,18 +13,23 @@ j = DSJoyStick()
 twoNumbers = ""
 # 2~4 個 symbol 組成一個字
 aWord = ""
+# 一個句子
 sentence = []
+# 口頭禪群組ID
+mantraID = []
 
 def willChooseDirectionCallback(direction):
     """
     左搖桿被移到某一個方向了，且還沒放掉搖桿
     """
+    print inspect.stack()[0][3]
     print("willSelectDirectionCallback: " + str(direction))
     
 def didChooseDirectionCallback(direction):
     """
     左搖桿從某個方向被放掉了。
     """
+    print inspect.stack()[0][3]
     print("getDirectionCallback: " + str(direction))
     global twoNumbers
     global aWord
@@ -52,14 +58,33 @@ def didChooseDirectionCallback(direction):
             twoNumbers = ""
     
 def getClickCallback():
+    print inspect.stack()[0][3]
     print("getClickCallback")
     
 def willChooseRightDirectionCallback(direction):
+    print inspect.stack()[0][3]
     print("willChooseRightDirectionCallback: " + str(direction))
     
 def didChooseRightDirectionCallback(direction):
+    print inspect.stack()[0][3]
     print("didChooseRightDirectionCallback: " + str(direction))
     global currentMode
+    if currentMode == kModeMenu:
+        # 進入了選單模式
+        if direction == 1:
+            currentMode = kModeFreeSpeak
+            print "choosed free speak mode"
+        if direction == 2:
+            currentMode = kModeMantra
+            print "choosed mantra mode"
+            """
+            1. 選擇是要建立、刪除還是選擇，右搖桿的 1 為建立， 2 為選擇，3為刪除。並提示使用者：您正要[建立, 刪除, 選擇]口頭禪，請先選擇群組
+            2. 選擇口頭禪群組並提示使用者目前選擇的是哪一個群組(您選擇的群組是：xy)
+            """
+        if direction == 8:
+            currentMode = kModeDocument
+            print "choosed document mode"
+            
     if currentMode == kModeFreeSpeak:
         global twoNumbers
         global aWord
@@ -73,16 +98,19 @@ def didChooseRightDirectionCallback(direction):
         if direction == 3:
             # 預聽目前為止輸入的句子，所以最後不清除 sentence
             playCurrentSentence()
-    if currentMode == kModeMenu:
-        # 進入了選單模式
-        if direction == 1:
-            currentMode = kModeFreeSpeak
-        if direction == 2:
-            currentMode = kModeMantra
-        if direction == 8:
-            currentMode = kModeDocument
-            
+
+    if currentMode == kModeMantra:
+        if len(mantraID) < 2:
+            # 輸入口頭禪群組
+            print "entering mantraID"
+            mantraID.append(direction)
+        else:
+            print(mantraID)
+            pass
+        
+
 def playCurrentSentence():
+    print inspect.stack()[0][3]
     playsound = DSPlaySound()
     for word in sentence:
         path = os.path.dirname(os.path.abspath(__file__)) + u"/sounds/"+ word + u".wav"
@@ -90,6 +118,7 @@ def playCurrentSentence():
         playsound.play(path)
 
 def playHint(message):
+    print inspect.stack()[0][3]
     print "play message: " + ', '.join(message)
     for word in message:
         path = os.path.dirname(os.path.abspath(__file__)) + u"/sounds/"+ word + u".wav"
@@ -99,6 +128,7 @@ def deletePreviousInput():
     """
     在 currentMode 為 0 時，右搖桿向左要刪除前一個輸入的數字、前一個注音符號、前一個字
     """
+    print inspect.stack()[0][3]
     global twoNumbers
     global aWord
     global sentence
@@ -113,7 +143,7 @@ def deletePreviousInput():
         sentence = sentence[:-1]
         
 def getRightClickCallback():
-    print("getRightClickCallback")
+    print inspect.stack()[0][3]
     playsound = DSPlaySound()
     currentMode = kModeMenu
     
