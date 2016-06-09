@@ -94,13 +94,14 @@ def didChooseRightDirectionCallback(direction):
                 # 依序發出句子裡每個字的聲音
                 playCurrentSentence()
             if currentMode == kModeMantraAdd:
-                ss = ','.join(sentence)
+                ss = ','.join(sentence) + '\n'
                 filename = os.path.dirname(os.path.abspath(__file__)) + '/mantra/' + ''.join(map(str, mantraID)) + '.txt'
                 if os.path.isfile(filename) == False:
                     call(['touch', filename])
                 f = open(filename, 'a')
                 f.write(ss.encode('utf8'))
                 f.close()
+                print("write a sentence to file")
             sentence = []
         if direction == 3:
             # 預聽目前為止輸入的句子，所以最後不清除 sentence
