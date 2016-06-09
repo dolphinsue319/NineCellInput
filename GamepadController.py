@@ -7,6 +7,7 @@ import inspect
 from DSJoyStick import DSJoyStick
 from DSPlaySound import DSPlaySound
 from Constants import *
+from subprocess import call
 
 j = DSJoyStick()
 playsound = DSPlaySound()
@@ -93,10 +94,11 @@ def didChooseRightDirectionCallback(direction):
                 # 依序發出句子裡每個字的聲音
                 playCurrentSentence()
             if currentMode == kModeMantraAdd:
-                filename = ''.join(map(str, mantraID)) + '.txt'
+                ss = ','.join(sentence)
+                filename = os.path.dirname(os.path.abspath(__file__)) + '/mantra/' + ''.join(map(str, mantraID)) + '.txt'
+                if os.path.isfile(filename) == False:
+                    call(['touch', filename])
                 f = open(filename, 'a')
-                ss = ','.join(sentence) + '\n'
-                print ss
                 f.write(ss.encode('utf8'))
                 f.close()
             sentence = []
