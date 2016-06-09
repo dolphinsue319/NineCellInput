@@ -16,7 +16,9 @@ sentence = []
 observing = False
 
 def deletePreviousInput():
-    # 在 currentMode 為 0 時，右搖桿向左要刪除前一個輸入的數字、前一個注音符號、前一個字
+    """
+    在 currentMode 為 0 時，右搖桿向左要刪除前一個輸入的數字、前一個注音符號、前一個字
+    """
     global twoNumbers
     global aWord
     global sentence
