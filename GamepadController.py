@@ -32,7 +32,7 @@ def didChooseDirectionCallback(direction):
     print inspect.stack()[0][3] + ': ' + str(direction)
     global twoNumbers
     global aWord
-    if currentMode == kModeFreeSpeak:
+    if currentMode == kModeFreeSpeak or currentMode == kModeMantraAdd:
         twoNumbers += str(direction)
         if len(twoNumbers) < 2:
             print("one number entered: " + str(twoNumbers))
@@ -82,15 +82,23 @@ def didChooseRightDirectionCallback(direction):
             print "choosed document mode"
         return
             
-    if currentMode == kModeFreeSpeak:
+    if currentMode == kModeFreeSpeak or currentMode == kModeMantraAdd:
         global twoNumbers
         global aWord
         global sentence
         if direction == 1:
             deletePreviousInput()
         if direction == 2:
-            # 依序發出句子裡每個字的聲音
-            playCurrentSentence()
+            if currentMode == kModeFreeSpeak:
+                # 依序發出句子裡每個字的聲音
+                playCurrentSentence()
+            if currentMode == kModeMantraAdd:
+                filename = ''.join(map(str, mantraID)) + '.txt'
+                f = open(filename, 'a')
+                ss = ','.join(sentence) + '\n'
+                print ss
+                f.write(ss.encode('utf8'))
+                f.close()
             sentence = []
         if direction == 3:
             # 預聽目前為止輸入的句子，所以最後不清除 sentence
@@ -100,13 +108,12 @@ def didChooseRightDirectionCallback(direction):
     if currentMode == kModeMantra:
         if len(mantraID) < 2:
             # 輸入口頭禪群組
-            print "entering mantraID"
+            print "enter mantraID"
             mantraID.append(direction)
-        else:
-            print(mantraID)
-            pass
+            if len(mantraID) == 2:
+                print("enter mantra group: " + ''.join(map(str, mantraID)))
+                currentMode = kModeMantraAdd
         return
-        
 
 def playCurrentSentence():
     print inspect.stack()[0][3]
@@ -142,7 +149,9 @@ def deletePreviousInput():
         
 def getRightClickCallback():
     print inspect.stack()[0][3]
+    global currentMode
     currentMode = kModeMenu
+    print "enter mode menu"
     
 j.getOutputs(willChooseDirectionCallback, 
 didChooseDirectionCallback, 
