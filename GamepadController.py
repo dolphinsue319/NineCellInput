@@ -58,6 +58,21 @@ def getClickCallback():
 def willChooseRightDirectionCallback(direction):
     print("willChooseRightDirectionCallback: " + str(direction))
     
+def deletePreviousInput():
+    # 在 currentMode 為 0 時，右搖桿向左要刪除前一個輸入的數字、前一個注音符號、前一個字
+    global twoNumbers
+    global aWord
+    global sentence
+    if len(twoNumbers) == 1:
+        print("delete one number: " + str(twoNumbers))
+        twoNumbers = ""
+    elif len(aWord) > 0:
+        print("delete final symbol in a word: " + aWord[-1])
+        aWord = aWord[:-1]
+    elif len(sentence) > 0:
+        print("delete final word in sentence: " + sentence[-1])
+        sentence = sentence[:-1]
+
 def didChooseRightDirectionCallback(direction):
     print("didChooseRightDirectionCallback: " + str(direction))
     global currentMode
@@ -66,16 +81,7 @@ def didChooseRightDirectionCallback(direction):
         global aWord
         global sentence
         if direction == 1:
-            # 在 currentMode 為 0 時，右搖桿向左要刪除前一個輸入的數字、前一個注音符號、前一個字
-            if len(twoNumbers) == 1:
-                print("delete one number: " + str(twoNumbers))
-                twoNumbers = ""
-            elif len(aWord) > 0:
-                print("delete final symbol in a word: " + aWord[-1])
-                aWord = aWord[:-1]
-            elif len(sentence) > 0:
-                print("delete final word in sentence: " + sentence[-1])
-                sentence = sentence[:-1]
+            deletePreviousInput()
         if direction == 2:
             # 依序發出句子裡每個字的聲音
             playCurrentSentence()
