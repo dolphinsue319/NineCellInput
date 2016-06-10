@@ -67,51 +67,17 @@ def didChooseRightDirectionCallback(direction):
     print inspect.stack()[0][3] + ': '+ str(direction)
     global currentMode
     global mantraID
-    if currentMode == kModeMenu:
-        # 進入了選單模式
-        if direction == 1:
-            currentMode = kModeFreeSpeak
-            print "choosed free speak mode"
-        if direction == 2:
-            currentMode = kModeMantra
-            print "choosed mantra mode"
-            """
-            1. 選擇是要建立、刪除還是選擇，右搖桿的 1 為建立， 2 為選擇，3 為刪除。並提示使用者：您正要[建立, 刪除, 選擇]口頭禪，請先選擇群組。
-            2. 選擇口頭禪群組並提示使用者目前選擇的是哪一個群組(您選擇的群組是：xy)
-            """
-        if direction == 8:
-            currentMode = kModeDocument
-            print "choosed document mode"
-        return
                         
     if currentMode in [kModeFreeSpeak, kModeMantraAdd] and len(mantraID) == 2:
-        global twoNumbers
-        global aWord
-        global sentence
-        if direction == 1:
-            deletePreviousInput()
-        if direction == 2:
-            if currentMode == kModeFreeSpeak:
-                # 依序發出句子裡每個字的聲音
-                playCurrentSentence()
-            if currentMode == kModeMantraAdd:
-                ss = ','.join(sentence) + '\n'
-                filename = os.path.dirname(os.path.abspath(__file__)) + '/mantra/' + ''.join(map(str, mantraID)) + '.txt'
-                if os.path.isfile(filename) == False:
-                    call(['touch', filename])
-                f = open(filename, 'a')
-                f.write(ss.encode('utf8'))
-                f.close()
-                currentMode = kModeMenu
-                mantraID = []
-                print("write a sentence to file")
-            sentence = []
-        if direction == 3:
-            # 預聽目前為止輸入的句子，所以最後不清除 sentence
-            playCurrentSentence()
+        inputSentence(direction)
         return
     if currentMode == kModeMantraSelect and len(mantraID) == 2:
-        print "selecting a mantra"
+        selectAMantraToSay()
+        print "selecting a mantra to say"
+        return
+        
+    if currentMode == kModeMenu:
+        selectMode(direction)
         return
         
     if currentMode == kModeMantraActionUnassigned:
@@ -124,6 +90,7 @@ def didChooseRightDirectionCallback(direction):
             print "enter select mantra mode"
         if direction == 3:
             currentMode = kModeMantraDelete
+            print "enter delete mantra mode"
         return
 
     if currentMode in [kModeMantraAdd, kModeMantraSelect, kModeMantraDelete]:
@@ -132,7 +99,40 @@ def didChooseRightDirectionCallback(direction):
             print "input mantraID"
             mantraID.append(direction)
             if len(mantraID) == 2:
+                if currentMode in [kModeMantraSelect, kModeMantraDelete]:
+                    # "選擇及刪除"口頭禪前，先檢查該群組是不是已存在了
+                    if os.path.isfile(mantraIDFilePath()) == False:
+                        print "there is no sucu mantraID, should input one more time."
+                        mantraID = []
+                        return
                 print("enter mantra group: " + ''.join(map(str, mantraID)))
+                
+def mantraIDFilePath():
+    """
+    將 mantraID 這個 array 轉成檔案路徑傳回去
+    """
+    global mantraID
+    return os.path.dirname(os.path.abspath(__file__)) + '/mantra/' + ''.join(map(str, mantraID)) + '.txt'
+def selectAMantraToSay():
+    """
+    選一句口頭禪，並說出來
+    """
+    f = open(mantraIDFilePath(), 'r')
+    print f.read()
+
+    
+def selectMode(direction):
+    print inspect.stack()[0][3]
+    global currentMode
+    if direction == 1:
+        currentMode = kModeFreeSpeak
+        print "enter free speak mode"
+    if direction == 2:
+        currentMode = kModeMantraActionUnassigned
+        print "choosing mantra action"
+    if direction == 8:
+        currentMode = kModeDocument
+        print "enter document mode"
 
 def playCurrentSentence():
     print inspect.stack()[0][3]
@@ -166,19 +166,54 @@ def deletePreviousInput():
         print("delete final word in sentence: " + sentence[-1])
         sentence = sentence[:-1]
         
+        
 def getRightClickCallback():
+    """
+    右搖桿被按下去了, 進入選單模式
+    """
     print inspect.stack()[0][3]
     global currentMode
-    currentMode = kModeMantraActionUnassigned
+    currentMode = kModeMenu
     # 進到 menu 時，清除剛剛輸入的任何字元
     global twoNumbers
     global aWord
     global sentence
+    global mantraID
     twoNumbers = ""
     aWord = ""
     sentence = []
+    mantraID = []
     print "enter mode menu"
     
+def inputSentence(direction):
+    print inspect.stack()[0][3]
+    global twoNumbers
+    global aWord
+    global sentence
+    global currentMode
+    global mantraID
+    if direction == 1:
+        deletePreviousInput()
+    if direction == 2:
+        if currentMode == kModeFreeSpeak:
+            # 依序發出句子裡每個字的聲音
+            playCurrentSentence()
+        if currentMode == kModeMantraAdd:
+            ss = ','.join(sentence) + '\n'
+            filename = os.path.dirname(os.path.abspath(__file__)) + '/mantra/' + ''.join(map(str, mantraID)) + '.txt'
+            if os.path.isfile(filename) == False:
+                call(['touch', filename])
+            f = open(filename, 'a')
+            f.write(ss.encode('utf8'))
+            f.close()
+            currentMode = kModeMenu
+            mantraID = []
+            print("write a sentence to file")
+        sentence = []
+    if direction == 3:
+        # 預聽目前為止輸入的句子，所以最後不清除 sentence
+        playCurrentSentence()
+
 j.getOutputs(willChooseDirectionCallback, 
 didChooseDirectionCallback, 
 willChooseRightDirectionCallback, 
