@@ -33,7 +33,10 @@ class HintMessages:
 # 自由輸入模式
 kModeFreeSpeak = 1
 kModeMantra = 2
+kModeMantraActionUnassigned = 20
 kModeMantraAdd = 21
+kModeMantraSelect = 22
+kModeMantraDelete = 23
 kModeDocument = 8
 # 選單模式
 kModeMenu = 0

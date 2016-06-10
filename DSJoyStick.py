@@ -71,7 +71,7 @@ class DSJoyStick:
 		
 		while True:
 			pygame.event.pump()
-			time.sleep(0.3)
+			time.sleep(0.1)
 			it = 0
 			#Read input from the two joysticks       
 			for i in range(0, self.myJoyStick.get_numaxes()):

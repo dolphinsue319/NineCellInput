@@ -82,8 +82,8 @@ def didChooseRightDirectionCallback(direction):
             currentMode = kModeDocument
             print "choosed document mode"
         return
-            
-    if currentMode == kModeFreeSpeak or currentMode == kModeMantraAdd:
+                        
+    if currentMode in [kModeFreeSpeak, kModeMantraAdd] and len(mantraID) == 2:
         global twoNumbers
         global aWord
         global sentence
@@ -101,22 +101,34 @@ def didChooseRightDirectionCallback(direction):
                 f = open(filename, 'a')
                 f.write(ss.encode('utf8'))
                 f.close()
+                currentMode = kModeMenu
+                mantraID = []
                 print("write a sentence to file")
             sentence = []
         if direction == 3:
             # 預聽目前為止輸入的句子，所以最後不清除 sentence
             playCurrentSentence()
         return
+            
+    if currentMode == kModeMantraActionUnassigned:
+        # 進入了口頭禪模式，現在要選擇是要建立、選擇還是刪除口頭禪
+        if direction == 1:
+            currentMode = kModeMantraAdd
+            print "enter add mantra mode"
+        if direction == 2:
+            currentMode = kModeMantraSelect
+        if direction == 3:
+            currentMode = kModeMantraDelete
+        return
 
-    if currentMode == kModeMantra:
+    if currentMode in [kModeMantraAdd, kModeMantraSelect, kModeMantraDelete]:
+        global mantraID
         if len(mantraID) < 2:
             # 輸入口頭禪群組
-            print "enter mantraID"
+            print "input mantraID"
             mantraID.append(direction)
             if len(mantraID) == 2:
                 print("enter mantra group: " + ''.join(map(str, mantraID)))
-                currentMode = kModeMantraAdd
-        return
 
 def playCurrentSentence():
     print inspect.stack()[0][3]
@@ -153,7 +165,7 @@ def deletePreviousInput():
 def getRightClickCallback():
     print inspect.stack()[0][3]
     global currentMode
-    currentMode = kModeMenu
+    currentMode = kModeMantraActionUnassigned
     # 進到 menu 時，清除剛剛輸入的任何字元
     global twoNumbers
     global aWord
