@@ -4,6 +4,7 @@ import copy
 import os
 import unittest
 import inspect
+import codecs
 from DSJoyStick import DSJoyStick
 from DSPlaySound import DSPlaySound
 from Constants import *
@@ -127,11 +128,15 @@ def inputMantraIndex(direction):
 
 def sayMantra(index):
     print inspect.stack()[0][3]
+    f = codecs.open(mantraGroupIDFilePath(), 'r', 'utf-8')
     index = index - 1
-    f = open(mantraGroupIDFilePath(), 'r')
     for i in range(0, index - 1, 1):
         f.readline()
-    print f.readline()
+    thisLine = f.readline().rstrip('\n')
+    print thisLine
+    global sentence
+    sentence = thisLine.split(',')
+    playCurrentSentence()
 
 def selectMode(direction):
     """
@@ -155,6 +160,7 @@ def playCurrentSentence():
     輸出一段話
     """
     print inspect.stack()[0][3]
+    global sentence
     for word in sentence:
         path = os.path.dirname(os.path.abspath(__file__)) + u"/sounds/"+ word + u".wav"
         print "play sound: " + path
