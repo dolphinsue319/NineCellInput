@@ -66,6 +66,7 @@ def willChooseRightDirectionCallback(direction):
 def didChooseRightDirectionCallback(direction):
     print inspect.stack()[0][3] + ': '+ str(direction)
     global currentMode
+    global mantraID
     if currentMode == kModeMenu:
         # 進入了選單模式
         if direction == 1:
@@ -75,7 +76,7 @@ def didChooseRightDirectionCallback(direction):
             currentMode = kModeMantra
             print "choosed mantra mode"
             """
-            1. 選擇是要建立、刪除還是選擇，右搖桿的 1 為建立， 2 為選擇，3為刪除。並提示使用者：您正要[建立, 刪除, 選擇]口頭禪，請先選擇群組
+            1. 選擇是要建立、刪除還是選擇，右搖桿的 1 為建立， 2 為選擇，3 為刪除。並提示使用者：您正要[建立, 刪除, 選擇]口頭禪，請先選擇群組。
             2. 選擇口頭禪群組並提示使用者目前選擇的是哪一個群組(您選擇的群組是：xy)
             """
         if direction == 8:
@@ -109,7 +110,10 @@ def didChooseRightDirectionCallback(direction):
             # 預聽目前為止輸入的句子，所以最後不清除 sentence
             playCurrentSentence()
         return
-            
+    if currentMode == kModeMantraSelect and len(mantraID) == 2:
+        print "selecting a mantra"
+        return
+        
     if currentMode == kModeMantraActionUnassigned:
         # 進入了口頭禪模式，現在要選擇是要建立、選擇還是刪除口頭禪
         if direction == 1:
@@ -117,12 +121,12 @@ def didChooseRightDirectionCallback(direction):
             print "enter add mantra mode"
         if direction == 2:
             currentMode = kModeMantraSelect
+            print "enter select mantra mode"
         if direction == 3:
             currentMode = kModeMantraDelete
         return
 
     if currentMode in [kModeMantraAdd, kModeMantraSelect, kModeMantraDelete]:
-        global mantraID
         if len(mantraID) < 2:
             # 輸入口頭禪群組
             print "input mantraID"
