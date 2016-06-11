@@ -151,12 +151,10 @@ def sayMantra(index):
             mantraIndex = []
             return
     sentence = f.readline().rstrip('\n').split(',')
-    print sentence
-    mantraIndex = []
-    currentMode = kModeMenu
-    global mantraGroupID
-    mantraGroupID = []
     playCurrentSentence()
+    print sentence
+    enterModeMenu()
+    
 
 def selectMode(direction):
     """
@@ -224,17 +222,7 @@ def getRightClickCallback():
         print "the mantra index is: " + index
         sayMantra(int(index))
         return
-    currentMode = kModeMenu
-    # 進到 menu 時，清除剛剛輸入的任何字元
-    global twoNumbers
-    global aWord
-    global sentence
-    global mantraGroupID
-    twoNumbers = ""
-    aWord = ""
-    sentence = []
-    mantraGroupID = []
-    print "enter mode menu"
+    enterModeMenu()
     
 def inputSentence(direction):
     print inspect.stack()[0][3]
@@ -257,13 +245,31 @@ def inputSentence(direction):
             f = open(filename, 'a')
             f.write(ss.encode('utf8'))
             f.close()
-            currentMode = kModeMenu
-            mantraGroupID = []
             print("write a sentence to file")
+            enterModeMenu()
         sentence = []
     if direction == 3:
         # 預聽目前為止輸入的句子，所以最後不清除 sentence
         playCurrentSentence()
+
+def enterModeMenu():
+    """
+    進入選單模式
+    """
+    print inspect.stack()[0][3]
+    global currentMode
+    currentMode = kModeMenu
+    global mantraGroupID
+    mantraGroupID = []
+    global twoNumbers
+    global aWord
+    global sentence
+    twoNumbers = ""
+    aWord = ""
+    sentence = []
+    global mantraIndex
+    mantraIndex = []
+
 
 j.getOutputs(willChooseDirectionCallback, 
 didChooseDirectionCallback, 
