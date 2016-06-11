@@ -111,13 +111,14 @@ def didChooseRightDirectionCallback(direction):
             print "please input mantraGroupID"
             mantraGroupID.append(direction)
             if len(mantraGroupID) == 2:
+                print("enter mantra group: " + ''.join(map(str, mantraGroupID)))
                 if currentMode in [kModeMantraSelect, kModeMantraDelete]:
                     # "選擇及刪除"口頭禪前，先檢查該群組是不是已存在了
                     if os.path.isfile(mantraGroupIDFilePath()) == False:
                         print "there is no sucu mantraGroupID, you should input it again."
                         mantraGroupID = []
                         return
-                print("enter mantra group: " + ''.join(map(str, mantraGroupID)))
+                    print("Please enter mantra index")
 
 def mantraIndexAdd(addValue):
     print inspect.stack()[0][3] + " the add value is: " + str(addValue)
