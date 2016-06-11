@@ -47,7 +47,6 @@ def didChooseDirectionCallback(direction):
             # 使用者輸入了兩個數字，在這裡組成一個注音符號
             aSymbol = kSymbols.get(twoNumbers, 0)
             if aSymbol == 0:
-                #TODO: 出聲提示使用者輸入錯誤
                 print("this symble is not exist: " + twoNumbers)
                 twoNumbers = twoNumbers[:-1]
                 return
