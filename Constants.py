@@ -37,6 +37,8 @@ kModeMantraActionUnassigned = 20
 kModeMantraAdd = 21
 kModeMantraSelect = 22
 kModeMantraDelete = 23
+kModeMantraIndexChoosing = 24
+kModeMantraIndexChoosed = 25
 kModeDocument = 8
 # 選單模式
 kModeMenu = 0

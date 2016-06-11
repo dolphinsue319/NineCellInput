@@ -12,6 +12,7 @@ from subprocess import call
 
 j = DSJoyStick()
 playsound = DSPlaySound()
+currentMode = kModeMenu
 # 兩個 int 組成一個注音符號
 twoNumbers = ""
 # 2~4 個 symbol 組成一個字
@@ -86,6 +87,16 @@ def didChooseRightDirectionCallback(direction):
         selectMode(direction)
         return
         
+    if currentMode == kModeMantraIndexChoosing:
+        # 使用者正在選擇 mantraIndex
+        if direction == 1:
+            index = mantraIndexAdd(-1)
+            sayMantra(index)
+        if direction == 2:
+            index = mantraIndexAdd(1)
+            sayMantra(index)
+        return
+            
     if currentMode == kModeMantraActionUnassigned:
         # 進入了口頭禪模式，現在選擇了是要建立、選擇還是刪除口頭禪
         selectMantraMode(direction)
@@ -106,6 +117,19 @@ def didChooseRightDirectionCallback(direction):
                         return
                 print("enter mantra group: " + ''.join(map(str, mantraGroupID)))
 
+def mantraIndexAdd(addValue):
+    print inspect.stack()[0][3] + " the add value is: " + str(addValue)
+    global mantraIndex
+    indexInt = int(''.join(map(str, mantraIndex)))
+    indexInt += addValue
+    if indexInt < 2:
+        indexInt = 1
+    indexStr = str(indexInt)
+    mantraIndex = []
+    for char in indexStr:
+        mantraIndex.append(char)
+    return indexInt
+    
 def selectMantraMode(direction):
     # 進入了口頭禪模式，現在要選擇是要建立、選擇還是刪除口頭禪
     global currentMode
@@ -138,22 +162,26 @@ def inputMantraIndex(direction):
     mantraIndex.append(direction)
 
 def sayMantra(index):
-    print inspect.stack()[0][3]
+    print inspect.stack()[0][3] + ", the index is: " + str(index)
     f = codecs.open(mantraGroupIDFilePath(), 'r', 'utf-8')
     index = index - 1
     global sentence
     global mantraIndex
+    global currentMode
     for i in range(0, index, 1):
-        print i
         thisLine = f.readline()
-        if thisLine == u'':
-            print "the index of mantra is not exist, please input again"
-            mantraIndex = []
-            return
     sentence = f.readline().rstrip('\n').split(',')
-    playCurrentSentence()
-    print sentence
-    enterModeMenu()
+    if ''.join(sentence) == '':
+        print "The index of mantra is not exist, please input again"
+        mantraIndex = []
+        currentMode = kModeMantraSelect
+        return
+
+    if currentMode == kModeMantraIndexChoosing:
+        print "Do you want to say: \"" + ''.join(sentence) + "\""
+    else:
+        playCurrentSentence()
+        enterModeMenu()
     
 
 def selectMode(direction):
@@ -218,6 +246,12 @@ def getRightClickCallback():
     global currentMode
     global mantraIndex
     if currentMode == kModeMantraSelect and len(mantraIndex) > 0:
+        currentMode = kModeMantraIndexChoosing
+        index = ''.join(map(str, mantraIndex))
+        sayMantra(int(index))
+        return
+    if currentMode == kModeMantraIndexChoosing:
+        currentMode = kModeMantraIndexChoosed
         index = ''.join(map(str, mantraIndex))
         print "the mantra index is: " + index
         sayMantra(int(index))
