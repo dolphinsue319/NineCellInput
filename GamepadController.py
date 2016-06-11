@@ -162,6 +162,9 @@ def inputMantraIndex(direction):
     mantraIndex.append(direction)
 
 def sayMantra(index):
+    """
+    提示或說一句口頭禪
+    """
     print inspect.stack()[0][3] + ", the index is: " + str(index)
     f = codecs.open(mantraGroupIDFilePath(), 'r', 'utf-8')
     index = index - 1
@@ -292,16 +295,16 @@ def enterModeMenu():
     """
     print inspect.stack()[0][3]
     global currentMode
-    currentMode = kModeMenu
-    global mantraGroupID
-    mantraGroupID = []
     global twoNumbers
     global aWord
     global sentence
+    global mantraGroupID
+    global mantraIndex
+    currentMode = kModeMenu
+    mantraGroupID = []
     twoNumbers = ""
     aWord = ""
     sentence = []
-    global mantraIndex
     mantraIndex = []
 
 
