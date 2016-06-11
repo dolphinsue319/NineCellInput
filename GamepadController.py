@@ -85,15 +85,7 @@ def didChooseRightDirectionCallback(direction):
         
     if currentMode == kModeMantraActionUnassigned:
         # 進入了口頭禪模式，現在要選擇是要建立、選擇還是刪除口頭禪
-        if direction == 1:
-            currentMode = kModeMantraAdd
-            print "enter add mantra mode"
-        if direction == 2:
-            currentMode = kModeMantraSelect
-            print "enter select mantra mode"
-        if direction == 3:
-            currentMode = kModeMantraDelete
-            print "enter delete mantra mode"
+        selectMantraMode(direction)
         return
 
     if currentMode in [kModeMantraAdd, kModeMantraSelect, kModeMantraDelete]:
@@ -109,6 +101,20 @@ def didChooseRightDirectionCallback(direction):
                         mantraGroupID = []
                         return
                 print("enter mantra group: " + ''.join(map(str, mantraGroupID)))
+
+def selectMantraMode(direction):
+    # 進入了口頭禪模式，現在要選擇是要建立、選擇還是刪除口頭禪
+    global currentMode
+    if direction == 1:
+        currentMode = kModeMantraAdd
+        print "enter add mantra mode"
+    if direction == 2:
+        currentMode = kModeMantraSelect
+        print "enter select mantra mode"
+    if direction == 3:
+        currentMode = kModeMantraDelete
+        print "enter delete mantra mode"
+
                 
 def mantraGroupIDFilePath():
     """
@@ -198,7 +204,7 @@ def getRightClickCallback():
     """
     print inspect.stack()[0][3]
     global currentMode
-    if currentMode == kModeMantraSelect:
+    if currentMode == kModeMantraSelect and len(mantraIndex) > 0:
         index = ''.join(map(str, mantraIndex ))
         print "the mantra index is: " + index
         sayMantra(int(index))
