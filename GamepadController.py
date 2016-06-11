@@ -71,7 +71,10 @@ def didChooseRightDirectionCallback(direction):
     global currentMode
     global mantraGroupID
                         
-    if currentMode in [kModeFreeSpeak, kModeMantraAdd] and len(mantraGroupID) == 2:
+    if currentMode == kModeFreeSpeak:
+        inputSentence(direction)
+        return
+    if currentMode == kModeMantraAdd and len(mantraGroupID) == 2:
         inputSentence(direction)
         return
     if currentMode == kModeMantraSelect and len(mantraGroupID) == 2:
@@ -84,7 +87,7 @@ def didChooseRightDirectionCallback(direction):
         return
         
     if currentMode == kModeMantraActionUnassigned:
-        # 進入了口頭禪模式，現在要選擇是要建立、選擇還是刪除口頭禪
+        # 進入了口頭禪模式，現在選擇了是要建立、選擇還是刪除口頭禪
         selectMantraMode(direction)
         print "please input 2 digits mantra group ID"
         return
@@ -139,11 +142,20 @@ def sayMantra(index):
     f = codecs.open(mantraGroupIDFilePath(), 'r', 'utf-8')
     index = index - 1
     global sentence
+    global mantraIndex
     for i in range(0, index, 1):
         print i
-        f.readline()
+        thisLine = f.readline()
+        if thisLine == u'':
+            print "the index of mantra is not exist, please input again"
+            mantraIndex = []
+            return
     sentence = f.readline().rstrip('\n').split(',')
     print sentence
+    mantraIndex = []
+    currentMode = kModeMenu
+    global mantraGroupID
+    mantraGroupID = []
     playCurrentSentence()
 
 def selectMode(direction):
@@ -211,8 +223,6 @@ def getRightClickCallback():
         index = ''.join(map(str, mantraIndex))
         print "the mantra index is: " + index
         sayMantra(int(index))
-        mantraIndex = []
-        currentMode = kModeMenu
         return
     currentMode = kModeMenu
     # 進到 menu 時，清除剛剛輸入的任何字元
