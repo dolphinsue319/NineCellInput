@@ -76,7 +76,7 @@ def didChooseRightDirectionCallback(direction):
         return
     if currentMode == kModeMantraSelect and len(mantraGroupID) == 2:
         inputMantraIndex(direction)
-        print "selecting a mantra to say"
+        print "selecting a mantra index to say"
         return
         
     if currentMode == kModeMenu:
@@ -86,6 +86,7 @@ def didChooseRightDirectionCallback(direction):
     if currentMode == kModeMantraActionUnassigned:
         # 進入了口頭禪模式，現在要選擇是要建立、選擇還是刪除口頭禪
         selectMantraMode(direction)
+        print "please input 2 digits mantra group ID"
         return
 
     if currentMode in [kModeMantraAdd, kModeMantraSelect, kModeMantraDelete]:
@@ -97,7 +98,7 @@ def didChooseRightDirectionCallback(direction):
                 if currentMode in [kModeMantraSelect, kModeMantraDelete]:
                     # "選擇及刪除"口頭禪前，先檢查該群組是不是已存在了
                     if os.path.isfile(mantraGroupIDFilePath()) == False:
-                        print "there is no sucu mantraGroupID, should input one more time."
+                        print "there is no sucu mantraGroupID, you should input it again."
                         mantraGroupID = []
                         return
                 print("enter mantra group: " + ''.join(map(str, mantraGroupID)))
@@ -110,6 +111,8 @@ def selectMantraMode(direction):
         print "enter add mantra mode"
     if direction == 2:
         currentMode = kModeMantraSelect
+        global mantraIndex
+        mantraIndex = []
         print "enter select mantra mode"
     if direction == 3:
         currentMode = kModeMantraDelete
@@ -130,18 +133,17 @@ def inputMantraIndex(direction):
     print inspect.stack()[0][3]
     global mantraIndex 
     mantraIndex.append(direction)
-    currentMode = kModeMenu
 
 def sayMantra(index):
     print inspect.stack()[0][3]
     f = codecs.open(mantraGroupIDFilePath(), 'r', 'utf-8')
     index = index - 1
-    for i in range(0, index - 1, 1):
-        f.readline()
-    thisLine = f.readline().rstrip('\n')
-    print thisLine
     global sentence
-    sentence = thisLine.split(',')
+    for i in range(0, index, 1):
+        print i
+        f.readline()
+    sentence = f.readline().rstrip('\n').split(',')
+    print sentence
     playCurrentSentence()
 
 def selectMode(direction):
@@ -155,7 +157,7 @@ def selectMode(direction):
         print "enter free speak mode"
     if direction == 2:
         currentMode = kModeMantraActionUnassigned
-        print "choosing mantra action"
+        print "please choose mantra action"
     if direction == 8:
         currentMode = kModeDocument
         print "enter document mode"
@@ -204,10 +206,13 @@ def getRightClickCallback():
     """
     print inspect.stack()[0][3]
     global currentMode
+    global mantraIndex
     if currentMode == kModeMantraSelect and len(mantraIndex) > 0:
-        index = ''.join(map(str, mantraIndex ))
+        index = ''.join(map(str, mantraIndex))
         print "the mantra index is: " + index
         sayMantra(int(index))
+        mantraIndex = []
+        currentMode = kModeMenu
         return
     currentMode = kModeMenu
     # 進到 menu 時，清除剛剛輸入的任何字元
