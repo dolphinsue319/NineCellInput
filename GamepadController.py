@@ -23,6 +23,8 @@ sentence = []
 mantraGroupID = []
 # 口頭禪序號
 mantraIndex = []
+# 是不是正要刪除一句口頭禪
+mantraDeleting = False
 
 def willChooseDirectionCallback(direction):
     """
@@ -78,7 +80,7 @@ def didChooseRightDirectionCallback(direction):
     if currentMode == kModeMantraAdd and len(mantraGroupID) == 2:
         inputSentence(direction)
         return
-    if currentMode == kModeMantraSelect and len(mantraGroupID) == 2:
+    if currentMode in [kModeMantraSelect, kModeMantraDelete] and len(mantraGroupID) == 2:
         inputMantraIndex(direction)
         print "selecting a mantra index to say"
         return
@@ -88,7 +90,7 @@ def didChooseRightDirectionCallback(direction):
         return
         
     if currentMode == kModeMantraIndexChoosing:
-        # 使用者正在選擇 mantraIndex
+        # 使用者正在選擇口頭禪的序號
         if direction == 1:
             index = mantraIndexAdd(-1)
             sayMantra(index)
@@ -106,7 +108,7 @@ def didChooseRightDirectionCallback(direction):
     if currentMode in [kModeMantraAdd, kModeMantraSelect, kModeMantraDelete]:
         if len(mantraGroupID) < 2:
             # 輸入口頭禪群組
-            print "input mantraGroupID"
+            print "please input mantraGroupID"
             mantraGroupID.append(direction)
             if len(mantraGroupID) == 2:
                 if currentMode in [kModeMantraSelect, kModeMantraDelete]:
@@ -143,6 +145,8 @@ def selectMantraMode(direction):
         print "enter select mantra mode"
     if direction == 3:
         currentMode = kModeMantraDelete
+        global mantraDeleting
+        mantraDeleting = True
         print "enter delete mantra mode"
 
                 
@@ -180,13 +184,33 @@ def sayMantra(index):
         currentMode = kModeMantraSelect
         return
 
+    global mantraDeleting
     if currentMode == kModeMantraIndexChoosing:
-        print "Do you want to say: \"" + ''.join(sentence) + "\""
-    else:
-        playCurrentSentence()
+        if mantraDeleting == True:
+            print "Do you want to delete: \"" + ''.join(sentence) + "\""
+        else:
+            print "Do you want to say: \"" + ''.join(sentence) + "\""
+        return
+    if currentMode == kModeMantraIndexChoosed:
+        if mantraDeleting == True:
+            deleteMantra(index)
+        else:
+            playCurrentSentence()
         enterModeMenu()
     
-
+def deleteMantra(index):
+    print inspect.stack()[0][3] + ', the index is: ' + str(index)
+    f = open(mantraGroupIDFilePath(), "r")
+    lines = f.readlines()
+    f.close()
+    lines.pop(index)
+    f = open(mantraGroupIDFilePath(), "w")
+    for line in lines:
+        f.write(line)
+    f.close()
+    global mantraDeleting
+    mantraDeleting = False
+    
 def selectMode(direction):
     """
     這裡是 menu mode，選擇要進何種模式：1為自由說話，2為口頭禪，3為說明模式
@@ -248,9 +272,10 @@ def getRightClickCallback():
     print inspect.stack()[0][3]
     global currentMode
     global mantraIndex
-    if currentMode == kModeMantraSelect and len(mantraIndex) > 0:
+    if currentMode in [kModeMantraSelect, kModeMantraDelete] and len(mantraIndex) > 0:
         currentMode = kModeMantraIndexChoosing
         index = ''.join(map(str, mantraIndex))
+        print "preview a mantra, the index is: " + index
         sayMantra(int(index))
         return
     if currentMode == kModeMantraIndexChoosing:
