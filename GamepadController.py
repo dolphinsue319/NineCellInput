@@ -93,9 +93,13 @@ def didChooseRightDirectionCallback(direction):
         if direction == 1:
             index = mantraIndexAdd(-1)
             sayMantra(index)
+            return
         if direction == 2:
             index = mantraIndexAdd(1)
             sayMantra(index)
+            return
+        print("Back to menu mode, because input other numbers")
+        enterModeMenu()
         return
             
     if currentMode == kModeMantraActionUnassigned:
