@@ -15,11 +15,11 @@ class DSPlaySound:
 		if "Darwin" not in platform.platform():
 			self.os = self.OSRPI
 			
-	def play(self, path):
+	def play(self, path, isHint):
 		if self.os == self.OSMAC:
-			self.playSoundInMac(path)
+			self.playSoundInMac(path, isHint)
 		else:
-			call(["aplay", path])
+			self.playSoundInRPi(path, isHint)
 			
 	def playDoc(self, filename):
 		"""
@@ -31,6 +31,15 @@ class DSPlaySound:
 		else:
 			call(["aplay", path])
 
-	def playSoundInMac(self, path):
-		call(["say", "-v", "Bells", "dong", "dong"])
+	def playSoundInMac(self, path, isHint):
+		if isHint:
+			call(["say", "-v", "Bells", "dong", "dong"])
+		else:
+			call(["say", "-v", "Bells", "ding", "ding"])
 		call(["afplay", path])
+		
+	def playSoundInRPi(self, path, isHint):
+		position = 'local'
+		if isHint == False:
+			position = 'hdmi'
+		call(["omxplayer", "-o", position, path])
