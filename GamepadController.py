@@ -13,6 +13,7 @@ from subprocess import call
 j = DSJoyStick()
 playsound = DSPlaySound()
 currentMode = kModeMenu
+DSPlaySound().playDoc('docEnterMenu')
 # 兩個 int 組成一個注音符號
 twoNumbers = ""
 # 2~4 個 symbol 組成一個字
@@ -243,11 +244,12 @@ def selectMode(direction):
     """
     這裡是 menu mode，選擇要進何種模式：1為自由說話，2為口頭禪，3為說明模式
     """
-    print inspect.stack()[0][3]
+    print inspect.stack()[0][3] + ", the mode is: " + str(direction)
     global currentMode
     if direction == 1:
         currentMode = kModeFreeSpeak
         print "enter free speak mode"
+        DSPlaySound().playDoc("docEnterFree")
     if direction == 2:
         currentMode = kModeMantraActionUnassigned
         print "please choose mantra action"
@@ -347,6 +349,7 @@ def enterModeMenu():
     進入選單模式
     """
     print inspect.stack()[0][3]
+    DSPlaySound().playDoc('docEnterMenu')
     global currentMode
     global twoNumbers
     global aWord
