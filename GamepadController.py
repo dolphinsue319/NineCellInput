@@ -253,10 +253,12 @@ def selectMode(direction):
     if direction == 2:
         currentMode = kModeMantraActionUnassigned
         print "please choose mantra action"
+        DSPlaySound().playDoc("docEnterMantra")
     if direction == 8:
         currentMode = kModeDocument
         print "enter document mode, please input document ID"
-        
+        DSPlaySound().playDoc("docEnterDoc")
+        DSPlaySound().playDoc("docMain")
 
 def playCurrentSentence():
     """
