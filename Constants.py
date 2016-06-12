@@ -42,7 +42,7 @@ kModeMantraIndexChoosed = 25
 kModeDocument = 8
 # 選單模式
 kModeMenu = 0
-currentMode = kModeFreeSpeak
+kModeSetupEnvironment = 7
 
 class HintMessagesTest(unittest.TestCase):
 	def test_is_message_array(self):

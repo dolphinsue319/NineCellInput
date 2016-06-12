@@ -6,9 +6,10 @@ import unittest
 import inspect
 import codecs
 from DSJoyStick import DSJoyStick
-from DSPlaySound import DSPlaySound
+from DSPlaySound import *
 from Constants import *
 from subprocess import call
+from GlobalVars import *
 
 j = DSJoyStick()
 currentMode = kModeMenu
@@ -83,6 +84,10 @@ def didChooseRightDirectionCallback(direction):
     global currentMode
     global mantraGroupID
 
+    if currentMode == kModeSetupEnvironment:
+        setupEnvironment(direction)
+        return
+        
     if currentMode == kModeDocument:
         sayDocument(direction)
         return
@@ -138,6 +143,12 @@ def didChooseRightDirectionCallback(direction):
                         return
                     print("Please input mantra index")
                     DSPlaySound().playDoc('docInputMantraIndex')
+
+def setupEnvironment(direction):
+    if direction == 1:
+        updateShouldSayHint()
+        print("shouldSayHint value is changed to: " + str(shouldSayHint()))
+        enterModeMenu()
 
 def sayDocument(direction):
     print inspect.stack()[0][3]
@@ -262,7 +273,7 @@ def deleteMantra(index):
     
 def selectMode(direction):
     """
-    這裡是 menu mode，選擇要進何種模式：1為自由說話，2為口頭禪，3為說明模式
+    這裡是 menu mode，選擇要進何種模式：1為自由說話，2為口頭禪，3為說明模式，7為設定操作環境，8為操作說明。
     """
     print inspect.stack()[0][3] + ", the mode is: " + str(direction)
     global currentMode
@@ -274,6 +285,10 @@ def selectMode(direction):
         currentMode = kModeMantraActionUnassigned
         print "please choose mantra action"
         DSPlaySound().playDoc("docEnterMantra")
+    if direction == 7:
+        print "You are in setup environment mode"
+        currentMode = kModeSetupEnvironment
+        DSPlaySound().playDoc("docEnterSetEnvironment")
     if direction == 8:
         currentMode = kModeDocument
         print "enter document mode, please input document ID"

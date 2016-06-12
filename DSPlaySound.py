@@ -24,8 +24,6 @@ class DSPlaySound:
 			self.playSoundInRPi(path, isHint)
 		
 	def playWithArray(self, array, isHint):
-#		if isHint and shouldSayHint == False and len(array) > 2:
-#			return
 		for char in array:
 			path = os.path.dirname(os.path.abspath(__file__)) + u"/sounds/"+ char + u".wav"
 			self.play(path, isHint)
@@ -41,7 +39,8 @@ class DSPlaySound:
 		"""
 		給我文件的主檔名就好
 		"""
-		if shouldSayHint == False:
+		print "shouldSayHint is: " + str(shouldSayHint())
+		if shouldSayHint() == False:
 			return
 		path = os.path.dirname(os.path.abspath(__file__)) + u"/documents/"+ filename + u".wav"
 		if self.os == self.OSMAC:
