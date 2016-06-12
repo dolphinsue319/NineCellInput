@@ -1,4 +1,4 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-shouldSayHint = True
+shouldSayHint = False
