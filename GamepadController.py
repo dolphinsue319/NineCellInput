@@ -25,6 +25,7 @@ mantraGroupID = []
 mantraIndex = []
 # 是不是正要刪除一句口頭禪
 mantraDeleting = False
+documentID = []
 
 def willChooseDirectionCallback(direction):
     """
@@ -72,7 +73,11 @@ def didChooseRightDirectionCallback(direction):
     print inspect.stack()[0][3] + ': ' + str(direction)
     global currentMode
     global mantraGroupID
-                        
+
+    if currentMode == kModeDocument:
+        sayDocument(direction)
+        return
+        
     if currentMode == kModeFreeSpeak:
         inputSentence(direction)
         return
@@ -123,6 +128,25 @@ def didChooseRightDirectionCallback(direction):
                         return
                     print("Please enter mantra index")
 
+def sayDocument(direction):
+    print inspect.stack()[0][3]
+    global documentID
+    documentID.append(direction)
+    if len(documentID) < 2:
+        return
+        
+    documentIDStr = ''.join(map(str, documentID))
+    print "The document ID is: " + documentIDStr
+    if documentIDStr == '11':
+        DSPlaySound().playDoc('doc11')
+    if documentIDStr == '12':
+        DSPlaySound().playDoc('doc12')
+    if documentIDStr == '13':
+        DSPlaySound().playDoc('doc13')
+    documentID = []
+    enterModeMenu()
+    
+    
 def mantraIndexAdd(addValue):
     print inspect.stack()[0][3] + " the add value is: " + str(addValue)
     global mantraIndex
@@ -229,7 +253,7 @@ def selectMode(direction):
         print "please choose mantra action"
     if direction == 8:
         currentMode = kModeDocument
-        print "enter document mode"
+        print "enter document mode, please input document ID"
         
 
 def playCurrentSentence():

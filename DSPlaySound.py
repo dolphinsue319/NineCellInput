@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 import platform
 from subprocess import call
+import os
 
 class DSPlaySound:
 	"""
@@ -16,4 +17,12 @@ class DSPlaySound:
 			call(["afplay", path])
 		else:
 			call(["aplay", path])
-		
+	def playDoc(self, filename):
+		"""
+		給我文件的主檔名就好
+		"""
+		path = os.path.dirname(os.path.abspath(__file__)) + u"/documents/"+ filename + u".wav"
+		if self.os == 0:
+			call(["afplay", path])
+		else:
+			call(["aplay", path])
