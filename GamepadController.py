@@ -51,10 +51,13 @@ def didChooseDirectionCallback(direction):
             aSymbol = kSymbols.get(twoNumbers, 0)
             if aSymbol == 0:
                 print("this symble is not exist: " + twoNumbers)
+                DSPlaySound().playDoc('docNoSymbol')
                 twoNumbers = twoNumbers[:-1]
                 return
                 
             print("a symbol is entered: " + aSymbol)
+            DSPlaySound().playWithArray([aSymbol], True)
+            
             aWord += aSymbol
             aSymbol = ""
             if twoNumbers[:1] == "7":
