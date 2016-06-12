@@ -16,11 +16,17 @@ class DSPlaySound:
 			self.os = self.OSRPI
 			
 	def play(self, path, isHint):
+		print path
 		if self.os == self.OSMAC:
 			self.playSoundInMac(path, isHint)
 		else:
 			self.playSoundInRPi(path, isHint)
-
+		
+	def playWithArray(self, array, isHint):
+		for char in array:
+			path = os.path.dirname(os.path.abspath(__file__)) + u"/sounds/"+ char + u".wav"
+			self.play(path, isHint)
+		
 	def playNumber(self, number):
 		path = os.path.dirname(os.path.abspath(__file__)) + u"/documents/num"+ str(number) + u".wav"
 		if self.os == self.OSMAC:
@@ -40,13 +46,19 @@ class DSPlaySound:
 
 	def playSoundInMac(self, path, isHint):
 		if isHint:
-			call(["say", "-v", "Bells", "do", "do"])
+			call(["say", "-v", "Bells", "do"])
 		else:
-			call(["say", "-v", "Bells", "ding", "ding"])
-		call(["afplay", path])
+			call(["say", "-v", "Bells", "ding"])
+		try:
+			call(["afplay", path])
+		except:
+			print("afplay is failed, the file is: " + path)
 		
 	def playSoundInRPi(self, path, isHint):
 		position = 'local'
 		if isHint == False:
 			position = 'hdmi'
-		call(["omxplayer", "-o", position, path])
+		try:
+			call(["omxplayer", "-o", position, path])
+		except:
+			print("omxplayer is failed, the file is: " + path)

@@ -121,7 +121,6 @@ def didChooseRightDirectionCallback(direction):
     if currentMode in [kModeMantraAdd, kModeMantraSelect, kModeMantraDelete]:
         if len(mantraGroupID) < 2:
             # 輸入口頭禪群組
-            print "please input mantraGroupID"
             mantraGroupID.append(direction)
             if len(mantraGroupID) == 2:
                 print("enter mantra group: " + ''.join(map(str, mantraGroupID)))
@@ -129,9 +128,11 @@ def didChooseRightDirectionCallback(direction):
                     # "選擇及刪除"口頭禪前，先檢查該群組是不是已存在了
                     if os.path.isfile(mantraGroupIDFilePath()) == False:
                         print "there is no sucu mantraGroupID, you should input it again."
+                        DSPlaySound().playDoc('docNoThisMantraGroupID')
                         mantraGroupID = []
                         return
-                    print("Please enter mantra index")
+                    print("Please input mantra index")
+                    DSPlaySound().playDoc('docInputMantraIndex')
 
 def sayDocument(direction):
     print inspect.stack()[0][3]
@@ -216,6 +217,7 @@ def sayMantra(index):
     sentence = f.readline().rstrip('\n').split(',')
     if ''.join(sentence) == '':
         print "The index of mantra is not exist, please input again"
+        DSPlaySound().playDoc('docNoMantraIndex')
         mantraIndex = []
         currentMode = kModeMantraSelect
         return
@@ -224,8 +226,11 @@ def sayMantra(index):
     if currentMode == kModeMantraIndexChoosing:
         if mantraDeleting == True:
             print "Do you want to delete: \"" + ''.join(sentence) + "\""
+            DSPlaySound().playDoc('docDoYouWantDelete')
         else:
             print "Do you want to say: \"" + ''.join(sentence) + "\""
+            DSPlaySound().playDoc('docDoYouWantSay')
+        DSPlaySound().playWithArray(sentence, True)
         return
     if currentMode == kModeMantraIndexChoosed:
         if mantraDeleting == True:
@@ -273,10 +278,7 @@ def playCurrentSentence():
     """
     print inspect.stack()[0][3]
     global sentence
-    for word in sentence:
-        path = os.path.dirname(os.path.abspath(__file__)) + u"/sounds/"+ word + u".wav"
-        print "play sound: " + path
-        playsound.play(path)
+    DSPlaySound().playWithArray(sentence, False)
 
 def playHint(message):
     print inspect.stack()[0][3]
