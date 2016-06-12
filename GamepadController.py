@@ -56,13 +56,15 @@ def didChooseDirectionCallback(direction):
                 return
                 
             print("a symbol is entered: " + aSymbol)
-            DSPlaySound().playWithArray([aSymbol], True)
+            if aSymbol not in [u'', u'ˊ', u'ˇ', u'ˋ', u'˙']:
+                DSPlaySound().playWithArray([aSymbol], True)
             
             aWord += aSymbol
             aSymbol = ""
             if twoNumbers[:1] == "7":
                 # 當輸入聲韻，表示一個字輸入完了
                 print("a word is entered: " + aWord)
+                DSPlaySound().playWithArray([aWord], True)
                 sentence.append(aWord)
                 aWord = ""
                 print("sentence is entered: " + str(sentence))
