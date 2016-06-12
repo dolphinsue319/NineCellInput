@@ -11,7 +11,6 @@ from Constants import *
 from subprocess import call
 
 j = DSJoyStick()
-playsound = DSPlaySound()
 currentMode = kModeMenu
 DSPlaySound().playDoc('docEnterMenu')
 # 兩個 int 組成一個注音符號
@@ -33,12 +32,14 @@ def willChooseDirectionCallback(direction):
     左搖桿被移到某一個方向了，且還沒放掉搖桿
     """
     print inspect.stack()[0][3] + ': ' + str(direction)
+    DSPlaySound().playNumber(direction)
     
 def didChooseDirectionCallback(direction):
     """
     左搖桿從某個方向被放掉了。
     """
     print inspect.stack()[0][3] + ': ' + str(direction)
+    DSPlaySound().playNumber(direction)
     global twoNumbers
     global aWord
     if currentMode == kModeFreeSpeak or currentMode == kModeMantraAdd:
@@ -69,9 +70,11 @@ def getClickCallback():
     
 def willChooseRightDirectionCallback(direction):
     print inspect.stack()[0][3] + ': ' + str(direction)
+    DSPlaySound().playNumber(direction)
     
 def didChooseRightDirectionCallback(direction):
     print inspect.stack()[0][3] + ': ' + str(direction)
+    DSPlaySound().playNumber(direction)
     global currentMode
     global mantraGroupID
 
@@ -112,6 +115,7 @@ def didChooseRightDirectionCallback(direction):
         # 進入了口頭禪模式，現在選擇了是要建立、選擇還是刪除口頭禪
         selectMantraMode(direction)
         print "please input 2 digits mantra group ID"
+        DSPlaySound().playDoc('docInputMantraGroupID')
         return
 
     if currentMode in [kModeMantraAdd, kModeMantraSelect, kModeMantraDelete]:
@@ -167,16 +171,19 @@ def selectMantraMode(direction):
     if direction == 1:
         currentMode = kModeMantraAdd
         print "enter add mantra mode"
+        DSPlaySound().playDoc('docEnterAddMantraMode')
     if direction == 2:
         currentMode = kModeMantraSelect
         global mantraIndex
         mantraIndex = []
         print "enter select mantra mode"
+        DSPlaySound().playDoc('docEnterSelectMantraMode')
     if direction == 3:
         currentMode = kModeMantraDelete
         global mantraDeleting
         mantraDeleting = True
         print "enter delete mantra mode"
+        DSPlaySound().playDoc('docEnterDeleteMantraMode')
 
                 
 def mantraGroupIDFilePath():
