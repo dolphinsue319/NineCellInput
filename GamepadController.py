@@ -280,13 +280,6 @@ def playCurrentSentence():
     global sentence
     DSPlaySound().playWithArray(sentence, False)
 
-def playHint(message):
-    print inspect.stack()[0][3]
-    print "play message: " + ', '.join(message)
-    for word in message:
-        path = os.path.dirname(os.path.abspath(__file__)) + u"/sounds/"+ word + u".wav"
-        playsound.play(path)
-
 def deletePreviousInput():
     """
     在 currentMode 為 0 時，右搖桿向左要刪除前一個輸入的數字、前一個注音符號、前一個字
@@ -347,13 +340,15 @@ def inputSentence(direction):
                 call(['touch', filename])
             f = open(filename, 'a')
             f.write(ss.encode('utf8'))
+            DSPlaySound().playDoc('docMantraAdded')
+            DSPlaySound().playWithArray(sentence, True)
             f.close()
             print("write a sentence to file")
             enterModeMenu()
         sentence = []
     if direction == 3:
         # 預聽目前為止輸入的句子，所以最後不清除 sentence
-        playCurrentSentence()
+        DSPlaySound().playWithArray(sentence, True)
 
 def enterModeMenu():
     """
@@ -381,8 +376,3 @@ willChooseRightDirectionCallback,
 didChooseRightDirectionCallback, 
 getClickCallback, 
 getRightClickCallback)
-
-class tests(unittest.TestCase):
-    def test_hint():
-        playHint(HintMessages.enterMenuMode)
-#unittest.main()
