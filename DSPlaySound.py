@@ -3,6 +3,7 @@
 import platform
 from subprocess import call
 import os
+from GlobalVars import *
 
 class DSPlaySound:
 	"""
