@@ -154,6 +154,9 @@ def sayDocument(direction):
         DSPlaySound().playDoc('doc12')
     if documentIDStr == '13':
         DSPlaySound().playDoc('doc13')
+    if documentIDStr == '14':
+        DSPlaySound().playDoc('doc14')
+
     documentID = []
     enterModeMenu()
     

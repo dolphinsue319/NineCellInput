@@ -24,8 +24,8 @@ class DSPlaySound:
 			self.playSoundInRPi(path, isHint)
 		
 	def playWithArray(self, array, isHint):
-		if isHint and shouldSayHint == False and len(array) > 2:
-			return
+#		if isHint and shouldSayHint == False and len(array) > 2:
+#			return
 		for char in array:
 			path = os.path.dirname(os.path.abspath(__file__)) + u"/sounds/"+ char + u".wav"
 			self.play(path, isHint)
