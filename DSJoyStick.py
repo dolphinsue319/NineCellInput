@@ -82,24 +82,25 @@ class DSJoyStick:
 				out[it] = self.myJoyStick.get_button(i)
 				it+=1
 			leftFocus[0], leftFocus[1] = out[0], out[1]
-			# out[5] 右邊的上
-			# out[6] 右邊的右
-			# out[7] 右邊的下
-			# out[8] 右邊的左
-			# out[16] 右邊被按下
-			rightFocus[0], rightFocus[1], rightFocus[2], rightFocus[3] = out[5], out[6], out[7], out[8]
+			# out[5] 右邊的上, 在 RPi 是 out[4]
+			# out[6] 右邊的右, 在 RPi 是 out[5]
+			# out[7] 右邊的下, 在 RPi 是 out[6]
+			# out[8] 右邊的左, 在 RPi 是 out[7]
+			# out[16] 右邊被按下, 在 RPi 是 out[15]
+			# out[15] 左邊被按下, 在 RPi 是 out[14]
+			rightFocus[0], rightFocus[1], rightFocus[2], rightFocus[3] = out[4], out[5], out[6], out[7]
 			
-			if out[15] == 1 and leftClickBuffer == 0:
+			if out[14] == 1 and leftClickBuffer == 0:
 				leftClickBuffer = 1
 				clickCallbak()
 			# 這個判斷是為了避免按下按鈕的時間太長，持續觸發 clickCallback
-			if out[15] == 0 and leftClickBuffer == 1:
+			if out[14] == 0 and leftClickBuffer == 1:
 				leftClickBuffer = 0
 				
-			if out[16] == 1 and rightClickBuffer == 0:
+			if out[15] == 1 and rightClickBuffer == 0:
 				rightClickBuffer = 1
 				rightClickCallback()
-			if out[16] == 0 and rightClickBuffer == 1:
+			if out[15] == 0 and rightClickBuffer == 1:
 				rightClickBuffer = 0
 				
 			if leftFocus != [0, 0]:
