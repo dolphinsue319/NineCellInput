@@ -202,6 +202,8 @@ def selectMantraMode(direction):
         currentMode = kModeMantraDelete
         global mantraDeleting
         mantraDeleting = True
+        global mantraIndex
+        mantraIndex = []
         print "enter delete mantra mode"
         DSPlaySound().playDoc('docEnterDeleteMantraMode')
 
