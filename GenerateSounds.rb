@@ -5,6 +5,6 @@ tones = ["", "ˊ", "ˇ", "ˋ", "˙"]
 for tone in tones
 	for combo in combos
 		word = combo+tone
-		`say -o #{word}.wav --data-format=UI8@8000 #{word}`
+		`say -o #{word}.wav --data-format=I16@44100 #{word}`
 	end
 end

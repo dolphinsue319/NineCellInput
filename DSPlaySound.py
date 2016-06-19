@@ -14,6 +14,7 @@ class DSPlaySound:
 		self.OSRPI = 0
 		self.os = self.OSMAC
 		if "Darwin" not in platform.platform():
+			print "This is RPi environment"
 			self.os = self.OSRPI
 			
 	def play(self, path, isHint):
@@ -59,10 +60,11 @@ class DSPlaySound:
 			print("afplay is failed, the file is: " + path)
 		
 	def playSoundInRPi(self, path, isHint):
-		position = 'local'
-		if isHint == False:
-			position = 'hdmi'
+		if isHint:
+			call(["amixer", "cset", "numid=3", "1"])
+		else:
+			call(["amixer", "cset", "numid=3", "2"])
 		try:
-			call(["omxplayer", "-o", position, path])
+			call(["aplay", path])
 		except:
-			print("omxplayer is failed, the file is: " + path)
+			print "aplay is failed, the file is: " + path
